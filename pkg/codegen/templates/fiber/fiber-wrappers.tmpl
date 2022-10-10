@@ -89,27 +89,22 @@ func (siw *ServerInterfaceWrapper) {{$opid}}(c *fiber.Ctx) error {
       headers := c.GetReqHeaders()
 
       {{range .HeaderParams}}// ------------- {{if .Required}}Required{{else}}Optional{{end}} header parameter "{{.ParamName}}" -------------
-        if valueList, found := headers[http.CanonicalHeaderKey("{{.ParamName}}")]; found {
+        if value, found := headers[http.CanonicalHeaderKey("{{.ParamName}}")]; found {
           var {{.GoName}} {{.TypeDef}}
-          n := len(valueList)
-          if n != 1 {
-            err = fmt.Errorf("Expected one value for {{.ParamName}}, got %d", n)
-            return fiber.NewError(fiber.StatusBadRequest, err.Error())
-          }
 
         {{if .IsPassThrough}}
-          params.{{.GoName}} = {{if not .Required}}&{{end}}valueList[0]
+          params.{{.GoName}} = {{if not .Required}}&{{end}}value
         {{end}}
 
         {{if .IsJson}}
-          err = json.Unmarshal([]byte(valueList[0]), &{{.GoName}})
+          err = json.Unmarshal([]byte(value), &{{.GoName}})
           if err != nil {
             return fiber.NewError(fiber.StatusBadRequest, fmt.Errorf("Error unmarshalling parameter '{{.ParamName}}' as JSON: %w", err).Error())
           }
         {{end}}
 
         {{if .IsStyled}}
-          err = runtime.BindStyledParameterWithLocation("{{.Style}}",{{.Explode}}, "{{.ParamName}}", runtime.ParamLocationHeader, valueList[0], &{{.GoName}})
+          err = runtime.BindStyledParameterWithLocation("{{.Style}}",{{.Explode}}, "{{.ParamName}}", runtime.ParamLocationHeader, value, &{{.GoName}})
           if err != nil {
             return fiber.NewError(fiber.StatusBadRequest, fmt.Errorf("Invalid format for parameter {{.ParamName}}: %w", err).Error())
           }
