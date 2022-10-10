@@ -44,10 +44,12 @@ func (siw *ServerInterfaceWrapper) {{$opid}}(c *fiber.Ctx) error {
     // Parameter object where we will unmarshal all parameters from the context
     var params {{.OperationId}}Params
 
+    {{if .QueryParams}}
     query, err := url.ParseQuery(string(c.Request().URI().QueryString()))
     if err != nil {
       return fiber.NewError(fiber.StatusBadRequest, fmt.Errorf("Invalid format for query string: %w", err).Error())
     }
+    {{end}}
 
     {{range $paramIdx, $param := .QueryParams}}
       {{- if (or (or .Required .IsPassThrough) (or .IsJson .IsStyled)) -}}
