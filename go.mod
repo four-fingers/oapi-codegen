@@ -9,6 +9,7 @@ require (
 	github.com/go-chi/chi/v5 v5.0.7
 	github.com/go-openapi/swag v0.21.1 // indirect
 	github.com/go-playground/validator/v10 v10.11.0 // indirect
+	github.com/gofiber/adaptor/v2 v2.1.28
 	github.com/gofiber/fiber/v2 v2.38.1
 	github.com/golang/protobuf v1.5.2 // indirect
 	github.com/golangci/lint-1 v0.0.0-20181222135242-d2cdd8c08219
