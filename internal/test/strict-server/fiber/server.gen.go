@@ -63,19 +63,11 @@ type MiddlewareFunc fiber.Handler
 // JSONExample operation middleware
 func (siw *ServerInterfaceWrapper) JSONExample(c *fiber.Ctx) error {
 
-	for _, middleware := range siw.HandlerMiddlewares {
-		middleware(c)
-	}
-
 	return siw.Handler.JSONExample(c)
 }
 
 // MultipartExample operation middleware
 func (siw *ServerInterfaceWrapper) MultipartExample(c *fiber.Ctx) error {
-
-	for _, middleware := range siw.HandlerMiddlewares {
-		middleware(c)
-	}
 
 	return siw.Handler.MultipartExample(c)
 }
@@ -83,19 +75,11 @@ func (siw *ServerInterfaceWrapper) MultipartExample(c *fiber.Ctx) error {
 // MultipleRequestAndResponseTypes operation middleware
 func (siw *ServerInterfaceWrapper) MultipleRequestAndResponseTypes(c *fiber.Ctx) error {
 
-	for _, middleware := range siw.HandlerMiddlewares {
-		middleware(c)
-	}
-
 	return siw.Handler.MultipleRequestAndResponseTypes(c)
 }
 
 // ReusableResponses operation middleware
 func (siw *ServerInterfaceWrapper) ReusableResponses(c *fiber.Ctx) error {
-
-	for _, middleware := range siw.HandlerMiddlewares {
-		middleware(c)
-	}
 
 	return siw.Handler.ReusableResponses(c)
 }
@@ -103,19 +87,11 @@ func (siw *ServerInterfaceWrapper) ReusableResponses(c *fiber.Ctx) error {
 // TextExample operation middleware
 func (siw *ServerInterfaceWrapper) TextExample(c *fiber.Ctx) error {
 
-	for _, middleware := range siw.HandlerMiddlewares {
-		middleware(c)
-	}
-
 	return siw.Handler.TextExample(c)
 }
 
 // UnknownExample operation middleware
 func (siw *ServerInterfaceWrapper) UnknownExample(c *fiber.Ctx) error {
-
-	for _, middleware := range siw.HandlerMiddlewares {
-		middleware(c)
-	}
 
 	return siw.Handler.UnknownExample(c)
 }
@@ -123,19 +99,11 @@ func (siw *ServerInterfaceWrapper) UnknownExample(c *fiber.Ctx) error {
 // UnspecifiedContentType operation middleware
 func (siw *ServerInterfaceWrapper) UnspecifiedContentType(c *fiber.Ctx) error {
 
-	for _, middleware := range siw.HandlerMiddlewares {
-		middleware(c)
-	}
-
 	return siw.Handler.UnspecifiedContentType(c)
 }
 
 // URLEncodedExample operation middleware
 func (siw *ServerInterfaceWrapper) URLEncodedExample(c *fiber.Ctx) error {
-
-	for _, middleware := range siw.HandlerMiddlewares {
-		middleware(c)
-	}
 
 	return siw.Handler.URLEncodedExample(c)
 }
@@ -179,10 +147,6 @@ func (siw *ServerInterfaceWrapper) HeadersExample(c *fiber.Ctx) error {
 
 	}
 
-	for _, middleware := range siw.HandlerMiddlewares {
-		middleware(c)
-	}
-
 	return siw.Handler.HeadersExample(c, params)
 }
 
@@ -193,15 +157,18 @@ type FiberServerOptions struct {
 }
 
 // RegisterHandlers creates http.Handler with routing matching OpenAPI spec.
-func RegisterHandlers(router fiber.Router, si ServerInterface) {
+func RegisterHandlers(router *fiber.App, si ServerInterface) {
 	RegisterHandlersWithOptions(router, si, FiberServerOptions{})
 }
 
 // RegisterHandlersWithOptions creates http.Handler with additional options
-func RegisterHandlersWithOptions(router fiber.Router, si ServerInterface, options FiberServerOptions) {
+func RegisterHandlersWithOptions(router *fiber.App, si ServerInterface, options FiberServerOptions) {
 	wrapper := ServerInterfaceWrapper{
-		Handler:            si,
-		HandlerMiddlewares: options.Middlewares,
+		Handler: si,
+	}
+
+	for _, m := range options.Middlewares {
+		router.Use(m)
 	}
 
 	router.Post(options.BaseURL+"/json", wrapper.JSONExample)

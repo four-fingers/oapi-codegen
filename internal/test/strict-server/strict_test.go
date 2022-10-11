@@ -56,7 +56,7 @@ func TestFiberServer(t *testing.T) {
 	server := fiber_api.StrictServer{}
 	strictHandler := fiber_api.NewStrictHandler(server, nil)
 	r := fiber.New()
-	fiber_api.RegisterHandlers(r.Group(""), strictHandler)
+	fiber_api.RegisterHandlers(r, strictHandler)
 	testImpl(t, adaptor.FiberApp(r))
 }
 

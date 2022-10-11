@@ -5,15 +5,18 @@ type FiberServerOptions struct {
 }
 
 // RegisterHandlers creates http.Handler with routing matching OpenAPI spec.
-func RegisterHandlers(router fiber.Router, si ServerInterface) {
+func RegisterHandlers(router *fiber.App, si ServerInterface) {
   RegisterHandlersWithOptions(router, si, FiberServerOptions{})
 }
 
 // RegisterHandlersWithOptions creates http.Handler with additional options
-func RegisterHandlersWithOptions(router fiber.Router, si ServerInterface, options FiberServerOptions) {
+func RegisterHandlersWithOptions(router *fiber.App, si ServerInterface, options FiberServerOptions) {
 {{if .}}wrapper := ServerInterfaceWrapper{
 Handler: si,
-HandlerMiddlewares: options.Middlewares,
+}
+
+for _, m := range options.Middlewares {
+    router.Use(m)
 }
 {{end}}
 {{range .}}
