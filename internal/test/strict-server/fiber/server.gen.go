@@ -54,8 +54,7 @@ type ServerInterface interface {
 
 // ServerInterfaceWrapper converts contexts to parameters.
 type ServerInterfaceWrapper struct {
-	Handler            ServerInterface
-	HandlerMiddlewares []MiddlewareFunc
+	Handler ServerInterface
 }
 
 type MiddlewareFunc fiber.Handler
@@ -157,12 +156,12 @@ type FiberServerOptions struct {
 }
 
 // RegisterHandlers creates http.Handler with routing matching OpenAPI spec.
-func RegisterHandlers(router *fiber.App, si ServerInterface) {
+func RegisterHandlers(router fiber.Router, si ServerInterface) {
 	RegisterHandlersWithOptions(router, si, FiberServerOptions{})
 }
 
 // RegisterHandlersWithOptions creates http.Handler with additional options
-func RegisterHandlersWithOptions(router *fiber.App, si ServerInterface, options FiberServerOptions) {
+func RegisterHandlersWithOptions(router fiber.Router, si ServerInterface, options FiberServerOptions) {
 	wrapper := ServerInterfaceWrapper{
 		Handler: si,
 	}
