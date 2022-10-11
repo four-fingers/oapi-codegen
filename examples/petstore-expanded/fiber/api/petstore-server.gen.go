@@ -35,8 +35,7 @@ type ServerInterface interface {
 
 // ServerInterfaceWrapper converts contexts to parameters.
 type ServerInterfaceWrapper struct {
-	Handler            ServerInterface
-	HandlerMiddlewares []MiddlewareFunc
+	Handler ServerInterface
 }
 
 type MiddlewareFunc fiber.Handler
@@ -68,19 +67,11 @@ func (siw *ServerInterfaceWrapper) FindPets(c *fiber.Ctx) error {
 		return fiber.NewError(fiber.StatusBadRequest, fmt.Errorf("Invalid format for parameter limit: %w", err).Error())
 	}
 
-	for _, middleware := range siw.HandlerMiddlewares {
-		middleware(c)
-	}
-
 	return siw.Handler.FindPets(c, params)
 }
 
 // AddPet operation middleware
 func (siw *ServerInterfaceWrapper) AddPet(c *fiber.Ctx) error {
-
-	for _, middleware := range siw.HandlerMiddlewares {
-		middleware(c)
-	}
 
 	return siw.Handler.AddPet(c)
 }
@@ -98,10 +89,6 @@ func (siw *ServerInterfaceWrapper) DeletePet(c *fiber.Ctx) error {
 		return fiber.NewError(fiber.StatusBadRequest, fmt.Errorf("Invalid format for parameter id: %w", err).Error())
 	}
 
-	for _, middleware := range siw.HandlerMiddlewares {
-		middleware(c)
-	}
-
 	return siw.Handler.DeletePet(c, id)
 }
 
@@ -116,10 +103,6 @@ func (siw *ServerInterfaceWrapper) FindPetByID(c *fiber.Ctx) error {
 	err = runtime.BindStyledParameter("simple", false, "id", c.Params("id"), &id)
 	if err != nil {
 		return fiber.NewError(fiber.StatusBadRequest, fmt.Errorf("Invalid format for parameter id: %w", err).Error())
-	}
-
-	for _, middleware := range siw.HandlerMiddlewares {
-		middleware(c)
 	}
 
 	return siw.Handler.FindPetByID(c, id)
@@ -139,8 +122,11 @@ func RegisterHandlers(router fiber.Router, si ServerInterface) {
 // RegisterHandlersWithOptions creates http.Handler with additional options
 func RegisterHandlersWithOptions(router fiber.Router, si ServerInterface, options FiberServerOptions) {
 	wrapper := ServerInterfaceWrapper{
-		Handler:            si,
-		HandlerMiddlewares: options.Middlewares,
+		Handler: si,
+	}
+
+	for _, m := range options.Middlewares {
+		router.Use(m)
 	}
 
 	router.Get(options.BaseURL+"/pets", wrapper.FindPets)

@@ -13,7 +13,10 @@ func RegisterHandlers(router fiber.Router, si ServerInterface) {
 func RegisterHandlersWithOptions(router fiber.Router, si ServerInterface, options FiberServerOptions) {
 {{if .}}wrapper := ServerInterfaceWrapper{
 Handler: si,
-HandlerMiddlewares: options.Middlewares,
+}
+
+for _, m := range options.Middlewares {
+    router.Use(m)
 }
 {{end}}
 {{range .}}

@@ -3,6 +3,8 @@ package strict_server
 import (
 	"bytes"
 	"encoding/json"
+	"github.com/gofiber/adaptor/v2"
+	"github.com/gofiber/fiber/v2"
 	"io"
 	"mime"
 	"mime/multipart"
@@ -19,6 +21,7 @@ import (
 	"github.com/deepmap/oapi-codegen/internal/test/strict-server/chi"
 	api3 "github.com/deepmap/oapi-codegen/internal/test/strict-server/client"
 	api4 "github.com/deepmap/oapi-codegen/internal/test/strict-server/echo"
+	fiber_api "github.com/deepmap/oapi-codegen/internal/test/strict-server/fiber"
 	api2 "github.com/deepmap/oapi-codegen/internal/test/strict-server/gin"
 	"github.com/deepmap/oapi-codegen/pkg/runtime"
 	"github.com/deepmap/oapi-codegen/pkg/testutil"
@@ -47,6 +50,14 @@ func TestGinServer(t *testing.T) {
 	r := gin.New()
 	handler := api2.RegisterHandlers(r, strictHandler)
 	testImpl(t, handler)
+}
+
+func TestFiberServer(t *testing.T) {
+	server := fiber_api.StrictServer{}
+	strictHandler := fiber_api.NewStrictHandler(server, nil)
+	r := fiber.New()
+	fiber_api.RegisterHandlers(r, strictHandler)
+	testImpl(t, adaptor.FiberApp(r))
 }
 
 func testImpl(t *testing.T, handler http.Handler) {
