@@ -3,8 +3,6 @@ package strict_server
 import (
 	"bytes"
 	"encoding/json"
-	"github.com/gofiber/adaptor/v2"
-	"github.com/gofiber/fiber/v2"
 	"io"
 	"mime"
 	"mime/multipart"
@@ -13,18 +11,21 @@ import (
 	"strings"
 	"testing"
 
+	"github.com/gofiber/adaptor/v2"
+	"github.com/gofiber/fiber/v2"
+
 	"github.com/gin-gonic/gin"
 	"github.com/go-chi/chi/v5"
 	"github.com/labstack/echo/v4"
 	"github.com/stretchr/testify/assert"
 
-	"github.com/deepmap/oapi-codegen/internal/test/strict-server/chi"
-	api3 "github.com/deepmap/oapi-codegen/internal/test/strict-server/client"
-	api4 "github.com/deepmap/oapi-codegen/internal/test/strict-server/echo"
-	fiber_api "github.com/deepmap/oapi-codegen/internal/test/strict-server/fiber"
-	api2 "github.com/deepmap/oapi-codegen/internal/test/strict-server/gin"
-	"github.com/deepmap/oapi-codegen/pkg/runtime"
-	"github.com/deepmap/oapi-codegen/pkg/testutil"
+	"github.com/four-fingers/oapi-codegen/internal/test/strict-server/chi"
+	api3 "github.com/four-fingers/oapi-codegen/internal/test/strict-server/client"
+	api4 "github.com/four-fingers/oapi-codegen/internal/test/strict-server/echo"
+	fiber_api "github.com/four-fingers/oapi-codegen/internal/test/strict-server/fiber"
+	api2 "github.com/four-fingers/oapi-codegen/internal/test/strict-server/gin"
+	"github.com/four-fingers/oapi-codegen/pkg/runtime"
+	"github.com/four-fingers/oapi-codegen/pkg/testutil"
 )
 
 func TestChiServer(t *testing.T) {
