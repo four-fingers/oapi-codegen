@@ -3,8 +3,9 @@ package securityprovider
 import (
 	"testing"
 
-	"github.com/deepmap/oapi-codegen/internal/test/client"
 	"github.com/stretchr/testify/assert"
+
+	"github.com/four-fingers/oapi-codegen/internal/test/client"
 )
 
 var (

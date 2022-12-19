@@ -21,7 +21,7 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/deepmap/oapi-codegen/pkg/types"
+	"github.com/four-fingers/oapi-codegen/pkg/types"
 )
 
 // This function takes a string, and attempts to assign it to the destination

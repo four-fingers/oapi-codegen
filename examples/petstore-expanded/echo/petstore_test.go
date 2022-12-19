@@ -24,10 +24,10 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 
-	"github.com/deepmap/oapi-codegen/examples/petstore-expanded/echo/api"
-	"github.com/deepmap/oapi-codegen/examples/petstore-expanded/echo/api/models"
-	"github.com/deepmap/oapi-codegen/pkg/middleware"
-	"github.com/deepmap/oapi-codegen/pkg/testutil"
+	"github.com/four-fingers/oapi-codegen/examples/petstore-expanded/echo/api"
+	"github.com/four-fingers/oapi-codegen/examples/petstore-expanded/echo/api/models"
+	"github.com/four-fingers/oapi-codegen/pkg/middleware"
+	"github.com/four-fingers/oapi-codegen/pkg/testutil"
 )
 
 func TestPetStore(t *testing.T) {

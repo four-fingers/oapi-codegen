@@ -12,8 +12,8 @@ import (
 
 	"github.com/gofiber/fiber/v2"
 
-	"github.com/deepmap/oapi-codegen/examples/petstore-expanded/fiber/api"
-	middleware "github.com/deepmap/oapi-codegen/pkg/fiber-middleware"
+	"github.com/four-fingers/oapi-codegen/examples/petstore-expanded/fiber/api"
+	middleware "github.com/four-fingers/oapi-codegen/pkg/fiber-middleware"
 )
 
 func NewFiberPetServer(petStore *api.PetStore) *fiber.App {
